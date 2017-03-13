@@ -67,7 +67,7 @@ Log in to  https://backend.sigfox.com
 	
 	Custom Payload Configuration: TransNo::uint:8 TxID::char:5 Raw::uint:20 Filtered:8:uint:20::3 Bat::uint:8
 	
-	URL Pattern: https://api.mlab.com/api/1/databases/your_dbname/collections/Sigfox?apiKey=your_api_key
+	URL Pattern: \https://api.mlab.com/api/1/databases/your_dbname/collections/Sigfox?apiKey=your_api_key\
 	
 	Use HTTP Method: POST
 	
@@ -124,14 +124,14 @@ and are as follows:
 ## 3) Set up the xDrip app to receive the data
 Install the xDrip application on your uploader phone, if you have not already done so.  First, set it up in the normal way that you would set up a standard xDrip/xbridge.  Then, in the "Settings", change the following two fields:
 
->>  Hardware Data Source:
+* Hardware Data Source:
 
 	Wifi Wixel (foxDrip only) OR:
 	
 	Wifi Wixel + xBridge Wixel (both foxDrip and standard xDrip)
 	
 
->>  List of receivers:
+* List of receivers:
 If you already use this with a yDrip, mDrip, NodeMCU, parakeet, etc. then you will already be familiar with this step.  Basically you add in a list of devices and databases where your data is available.  For foxDrip, you want to add your new mlab "Sigfox" collection.  The required entry should look something like
 
 	mongodb://Keith:myDBpassword@ds053611.mongolab.com@53611/mycgmdb/Sigfox
