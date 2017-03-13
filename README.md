@@ -77,8 +77,9 @@ Log in to  https://backend.sigfox.com
 	
 	Body:
 	
-``{
- "SigfoxData" : "{data}",
+```
+{
+  "SigfoxData" : "{data}",
   "TransmissionId": {customData#TransNo},
   "TransmitterId": "{customData#TxID}",
   "RawValue": {customData#Raw},
