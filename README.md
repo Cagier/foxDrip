@@ -77,40 +77,24 @@ Log in to  https://backend.sigfox.com
 	
 	Body:
 	
-'''{
-
+``{
  "SigfoxData" : "{data}",
- 
- "TransmissionId": {customData#TransNo},
- 
- "TransmitterId": "{customData#TxID}",
- 
- "RawValue": {customData#Raw},
- 
- "FilteredValue": {customData#Filtered},
- 
- "BatteryLife": {customData#Bat},
- 
- "CaptureDateTime": {time}000,
- 
- "ReceivedSignalStrength": -99,
- 
- "UploaderBatteryLife": 100,
- 
- "SigfoxDevice": "{device}",
- 
- "SigfoxSnr":{snr},
- 
- "SigfoxStation": "{station}",
- 
- "SigfoxAvgSnr" : "{avgSnr}",
- 
- "SigfoxRssi" : {rssi},
- 
- "SigfoxSeqNo" : {seqNumber}
- 
-}
-'''
+  "TransmissionId": {customData#TransNo},
+  "TransmitterId": "{customData#TxID}",
+  "RawValue": {customData#Raw},
+  "FilteredValue": {customData#Filtered},
+  "BatteryLife": {customData#Bat},
+  "CaptureDateTime": {time}000,
+  "ReceivedSignalStrength": -99,
+  "UploaderBatteryLife": 100,
+  "SigfoxDevice": "{device}",
+  "SigfoxSnr":{snr},
+  "SigfoxStation": "{station}",
+  "SigfoxAvgSnr" : "{avgSnr}",
+  "SigfoxRssi" : {rssi},
+  "SigfoxSeqNo" : {seqNumber}
+ }
+```
 
 
 You should be able to copy and paste the payload, URL and Body information from here and paste it into that screen.
