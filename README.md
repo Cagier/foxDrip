@@ -1,5 +1,4 @@
-foxDrip - An Introduction
-=========================
+# foxDrip - An Introduction
 
 A foxDrip is a device that requires no bluetooth, no wifi and no mobile phone signal and allows the user to relay blood glucose readings remotely from a G4 CGM sensor without the need to carry a mobile phone.  (It still sends these signals to an uploader phone or android tablet but that device does not need to be even in the same country and so it can theoretically be left at home, connected over WiFi.)  So how does it work?
 
@@ -19,74 +18,99 @@ Detailed instructions are provided to get everything set up quickly.
 
 
 
-How to make a foxDrip system
-============================
+# How to make a foxDrip system
 
-1) Build the foxDrip Hardware device.
+## 1) Build the foxDrip Hardware device.
 
-a) Partslist:
+### a) Partslist:
 This is similar to the xDrip hardware but we use a sigfox module instead of a bluetooth module:
-	Wixel
-	LiPo battery
-	USB Lipo Charger
-	A tic-tac box
-	Sigfox Breakout board BRKWS01 - available from https://yadom.fr/carte-breakout-sfm10r1.html
-	Any suitable miniature uFL antenna - I used this one here https://ie.rs-online.com/web/p/products/7043417/
+* Wixel
+* LiPo battery
+* USB Lipo Charger
+* A tic-tac box
+* Sigfox Breakout board BRKWS01 - available from https://yadom.fr/carte-breakout-sfm10r1.html
+* Any suitable miniature uFL antenna - I used this one here https://ie.rs-online.com/web/p/products/7043417/
 
 Any 850-900Mhz uFL antenna should work in Europe.  868Mhz is the actual Sigfox frequency range in Europe.
 
 The sigfox kit above comes with a larger antenna (which is good for initial testing) and 1 year's free subscription to the Sigfox network. Other boards and modules will probably work also but this one is nice and small and uses an extremely simple AT command set.  Also, the board above is a European version but there are other similar modules that work in the US and ASia which should be reasonably interchangeable.  However, if using another board then some tweaks to the foxdrip.c source might be required so contact me for advice on this (preferably before purchasing anything) if you are considering using an alternative module.
 
 
-b) Load Software:
+### b) Load Software:
 Compile and load the foxdrip software onto the Wixel (in same way as the you would the dexdrip.wxl or xbridge2.wxl files).  Remember to change your transmittter ID within the foxdrip.c code before compiling if you do not want to receive signals from other nearby G4 CGM users.  If that doesn't bother you then you don't need to worry about the rest of the repository or the wixel development bundle and you can just download the prepared foxdrip.wxl file for transfer to the Wixel with the standard pololu Wixel Configuration Utility.  Detailed instructions on how to load the foxdrip.wxl app onto the wixel can be found at https://www.pololu.com/docs/0J46/3.d
 
 
-c) Construction:
+### c) Construction:
 Wire it all together as per the circuit diagram, soldering the connections one by one before connecting the antenna and the battery.
 (I'll elaborate on this a bit later but if you have built an xDrip before then it is nearly the same.)
 IMPORTANT: Make sure you have an antenna properly connected to the Sigfox board before powering up the foxDrip or you could damage the transmitter unit.  So please connect the battery as the last step!  (Also, be aware that once you have everything wired then connecting a USB cable to the Wixel will power the sigfox board as well.)
 
 
 
-2) Set up the Sigfox Backend
+## 2) Set up the Sigfox Backend
 There are a couple of steps to add your device to the network and get it to communicate with Nightscout.
 
-a) Set up the Sigfox subscription
+### a) Set up the Sigfox subscription
 As per the instructions that come with the Sigfox board, this is very quick and straightforward.
 The exact details may vary, depending on what country/region that you are in.  For the board I used, I just had to visit http://snoc.fr/sigfoxactivate which directed me to my local country's network provider.  (In Ireland we use VT Networks who piggy-back on the Saorview transmission sites, amongst other locations.)  There you simply enter your Sigfox PAC ID and PAC to activate the device subscription.
 
-b) Set up the Callback parameters
+### b) Set up the Callback parameters
 Log in to  https://backend.sigfox.com
 * Go to Device Type and click on the Name of your device
 * Click on "CALLBACKS" on the bottom left
 * Click on "New" near the top on the right-hand side
 * Select "Custom callback" and use the parameters below:
+
 	Type: Data/ Uplink
+	
 	Channel: URL
+	
 	Custom Payload Configuration: TransNo::uint:8 TxID::char:5 Raw::uint:20 Filtered:8:uint:20::3 Bat::uint:8
+	
 	URL Pattern: https://api.mlab.com/api/1/databases/your_dbname/collections/Sigfox?apiKey=your_api_key
+	
 	Use HTTP Method: POST
+	
 	Send SNI: Does not need to be ticked
+	
 	Content type: application/json
+	
 	Body:
-{
+	
+'''{
+
  "SigfoxData" : "{data}",
+ 
  "TransmissionId": {customData#TransNo},
+ 
  "TransmitterId": "{customData#TxID}",
+ 
  "RawValue": {customData#Raw},
+ 
  "FilteredValue": {customData#Filtered},
+ 
  "BatteryLife": {customData#Bat},
+ 
  "CaptureDateTime": {time}000,
+ 
  "ReceivedSignalStrength": -99,
+ 
  "UploaderBatteryLife": 100,
+ 
  "SigfoxDevice": "{device}",
+ 
  "SigfoxSnr":{snr},
+ 
  "SigfoxStation": "{station}",
+ 
  "SigfoxAvgSnr" : "{avgSnr}",
+ 
  "SigfoxRssi" : {rssi},
+ 
  "SigfoxSeqNo" : {seqNumber}
+ 
 }
+'''
 
 
 You should be able to copy and paste the payload, URL and Body information from here and paste it into that screen.
@@ -112,43 +136,55 @@ and are as follows:
 
 
 
-3) Set up the xDrip app to receive the data
+## 3) Set up the xDrip app to receive the data
 Install the xDrip application on your uploader phone, if you have not already done so.  First, set it up in the normal way that you would set up a standard xDrip/xbridge.  Then, in the "Settings", change the following two fields:
 
 >>  Hardware Data Source:
+
 	Wifi Wixel (foxDrip only) OR:
+	
 	Wifi Wixel + xBridge Wixel (both foxDrip and standard xDrip)
+	
 
 >>  List of receivers:
 If you already use this with a yDrip, mDrip, NodeMCU, parakeet, etc. then you will already be familiar with this step.  Basically you add in a list of devices and databases where your data is available.  For foxDrip, you want to add your new mlab "Sigfox" collection.  The required entry should look something like
+
 	mongodb://Keith:myDBpassword@ds053611.mongolab.com@53611/mycgmdb/Sigfox
 
 
 The example given in the help for this box is normally mongodb://user:pass@ds053598.mongolab.com@53598/db/collection.
 As "Sigfox" is the collection name used in the Sigfox backend above then we will use that here so the format is
+
 	mongodb://user:pass@ds053598.mongolab.com@53598/db/Sigfox
+	
 You will obviously need to modify this further to use your own mlab details.  If you use the "MongoDB" option to upload your data to Nightscout then it will be nearly identical to the URI that is in that parameter, except you add "/Sigfox" to the end (with no quotes).
 
 If you are still having trouble working out what this should look like for you, log into mlab and select your database.  There will be some text in the top left that should help you with these parameters.  It will say:
+
 	"To connect using a driver via the standard MongoDB URI (what's this?):"
+	
 	mongodb://<dbuser>:<dbpassword>@ds053611.mlab.com:53611/mycgmdb
+	
 So, if you just modify this to read
+
 	mongodb://<dbuser>:<dbpassword>@ds053611.mlab.com:53611/mycgmdb/Sigfox
+	
 and replace <dbuser> and <dbpassword> with your credentials then you will get something that looks like
+
 	mongodb://Keith:myuserpassword@ds053611.mongolab.com@53611/mycgmdb/Sigfox
+	
 
 Please note that it is very important NOT to use the User name and password that you use to log into mlab.  You must instead use the the DATABASE User Name and Password.  If you need a reminder, the "Users" tab is between the "Collections" and "Stats" tabs in mlab and the valid database users should be listed there.  However, the password is not shown there so hopefully you can remember that yourself or have it written down somewhere!  If all else fails you can add another User on that screen and use that instead...
 
 
 
-4) Restrictions
+## 4) Restrictions
 Devices on the Sigfox network are theoretically limited to 140 per day (which comes from the legal ETSI 1% rule).  As the G4 transmits approximately double these amount of readings in a day (288 if no missed readings), the options are to programatically restrict the foxdrip to only send a reading every 10 minutes (instead of every 5 minutes) or to ignore this and just to only use the foxdrip for up to 12 hours a day.  I have gone with the latter option for the moment as you are technically exempt from this limit if developing prototypes.  As foxDrips are not commercial products and based on development boards then all such units fall into this category as far as I can determine.  However, it is something that I might look at in more detail in future.
 
 
 
 
-Troubleshooting:
-================
+# Troubleshooting:
 
 Hopefully it will all just magically work but if you are struggling to get it going then here are some things to check out...
 
@@ -167,7 +203,6 @@ Hopefully it will all just magically work but if you are struggling to get it go
 
 
 
-And finally...
-==============
+# And finally...
 
 Like the mDrip and the yDrip, this is a labour of love.  I'd really appreciate any feedback that you have on this project.  Please share your experiences and message me via Github with any queries or compliments!  ;)
