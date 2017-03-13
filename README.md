@@ -67,7 +67,7 @@ Log in to  https://backend.sigfox.com
 	
 	Custom Payload Configuration: TransNo::uint:8 TxID::char:5 Raw::uint:20 Filtered:8:uint:20::3 Bat::uint:8
 	
-	URL Pattern: \https://api.mlab.com/api/1/databases/your_dbname/collections/Sigfox?apiKey=your_api_key\
+	URL Pattern: https://api.mlab.com/api/1/databases/your_dbname/collections/Sigfox?apiKey=your_api_key
 	
 	Use HTTP Method: POST
 	
