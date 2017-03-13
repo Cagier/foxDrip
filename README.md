@@ -108,16 +108,17 @@ you need to change two things:
 * Replace "your_api_key" with the api key generate by mlab - e.g. "2E81PUmPFI84t7UIc_5YdldAp1ruUPKye"
 
 So an example URL pattern would be something like
+
 	https://api.mlab.com/api/1/databases/mycgmdb/collections/Sigfox?apiKey=2E81PUmPFI84t7UIc_5YdldAp1ruUPKye
 
 
 The details of how to set up the api key can be found at http://docs.mlab.com/data-api/
 and are as follows:
-	> Log in to the mLab management portal
-	> Click your username (not the account name) in the upper right-hand corner to open your account user profile
-	> If you are already in the account details page, then click on the row with your username in the Account Users section
-	> If the status is showing as “Data API Access: Disabled” in the “API Key” section, click the “Enable Data API access” button
-	> Once Data API access is enabled, your current API key will be displayed in the “API key” field 
+> Log in to the mLab management portal
+> Click your username (not the account name) in the upper right-hand corner to open your account user profile
+> If you are already in the account details page, then click on the row with your username in the Account Users section
+> If the status is showing as “Data API Access: Disabled” in the “API Key” section, click the “Enable Data API access” button
+> Once Data API access is enabled, your current API key will be displayed in the “API key” field 
 
 
 
